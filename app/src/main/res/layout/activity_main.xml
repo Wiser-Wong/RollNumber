@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <com.wiser.rollnumber.RunTextView
+        android:id="@+id/tvNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:text="Hello World!"
+        android:textSize="30sp" />
+
+    <com.wiser.roll.RollNumberView
+        android:id="@+id/rnv_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:text="Hello World!"
+        app:rnv_end_text="李焕英"
+        app:rnv_end_text_color="#0000ff"
+        app:rnv_end_text_size="30sp"
+        app:rnv_numbers="100"
+        app:rnv_numbers_color="#00ff00"
+        app:rnv_numbers_size="40sp"
+        app:rnv_roll_duration="1200"
+        app:rnv_roll_random_max_count="10"
+        app:rnv_start_text="你好"
+        app:rnv_start_text_color="#ff00ff"
+        app:rnv_start_text_size="20sp"
+        app:rnv_text_is_stroke="true"
+        app:rnv_text_stroke="2dp"
+        app:rnv_roll_direction="up"
+        app:rnv_numbers_padding_left="20dp"
+        app:rnv_numbers_padding_right="20dp"/>
+
+    <com.wiser.roll.RollNumberView
+        android:id="@+id/rnv_number2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:text="Hello World!"
+        app:rnv_end_text="李焕英"
+        app:rnv_end_text_color="#0000ff"
+        app:rnv_end_text_size="30sp"
+        app:rnv_numbers="100"
+        app:rnv_numbers_color="#00ff00"
+        app:rnv_numbers_size="40sp"
+        app:rnv_roll_duration="1200"
+        app:rnv_roll_random_max_count="10"
+        app:rnv_start_text="你好"
+        app:rnv_start_text_color="#ff00ff"
+        app:rnv_start_text_size="20sp"
+        app:rnv_text_is_stroke="true"
+        app:rnv_text_stroke="2dp"
+        app:rnv_roll_direction="up"
+        app:rnv_numbers_padding_left="20dp"
+        app:rnv_numbers_padding_right="20dp"/>
+
+    <com.wiser.rollnumber.ticker.TickerView
+        android:id="@+id/tickerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="30sp"
+        app:ticker_animationDuration="800"
+        app:ticker_defaultPreferredScrollingDirection="down" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开始滚动"
+        android:onClick="rollClick"/>
+
+    <com.wiser.rollnumber.NumberFlipView
+        android:id="@+id/nfv_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        android:textSize="30sp" />
+
+</LinearLayout>

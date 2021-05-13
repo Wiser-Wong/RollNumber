@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RollNumberView">
+        <attr name="rnv_roll_duration" format="reference|integer"/>
+        <attr name="rnv_roll_random_max_count" format="reference|integer"/>
+        <attr name="rnv_start_text" format="reference|string"/>
+        <attr name="rnv_end_text" format="reference|string"/>
+        <attr name="rnv_numbers" format="reference|integer"/>
+        <attr name="rnv_start_text_size" format="reference|dimension"/>
+        <attr name="rnv_end_text_size" format="reference|dimension"/>
+        <attr name="rnv_numbers_size" format="reference|dimension"/>
+        <attr name="rnv_start_text_color" format="reference|color"/>
+        <attr name="rnv_end_text_color" format="reference|color"/>
+        <attr name="rnv_numbers_color" format="reference|color"/>
+        <attr name="rnv_text_stroke" format="reference|dimension"/>
+        <attr name="rnv_text_is_stroke" format="reference|boolean"/>
+        <attr name="rnv_numbers_padding_left" format="reference|dimension"/>
+        <attr name="rnv_numbers_padding_right" format="reference|dimension"/>
+        <attr name="rnv_roll_direction" format="reference|integer">
+            <enum name="up" value="1000"/>
+            <enum name="down" value="1001"/>
+        </attr>
+    </declare-styleable>
+</resources>
