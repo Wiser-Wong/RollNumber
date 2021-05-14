@@ -25,13 +25,13 @@ class MainActivity : AppCompatActivity() {
 
         tvNumber?.runWithAnimation(220f)
 
-        tickerView.run { tickerView.text = "$" + (0..1000).random() + "$" }//显示
+        tickerView.run { tickerView.text = "$123" + (0..1000).random() + "$" }//显示
 
         val sb = StringBuffer()
         for (i in 0..(0..3).random()) {
             sb.append((0..9).random())
         }
-        rnv_number?.setText(2130)
-        rnv_number2?.setText(sb.toString().toInt(),"你好","美女")
+        rnv_number?.setText(numbers = "1231239999199", isAnimator = true)
+        rnv_number2?.setText(sb.toString(), "你好", "美女")
     }
 }

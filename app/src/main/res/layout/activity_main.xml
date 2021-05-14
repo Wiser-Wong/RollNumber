@@ -29,7 +29,7 @@
         app:rnv_numbers="100"
         app:rnv_numbers_color="#00ff00"
         app:rnv_numbers_size="40sp"
-        app:rnv_roll_duration="1200"
+        app:rnv_roll_duration="25000"
         app:rnv_roll_random_max_count="10"
         app:rnv_start_text="你好"
         app:rnv_start_text_color="#ff00ff"
@@ -37,8 +37,7 @@
         app:rnv_text_is_stroke="true"
         app:rnv_text_stroke="2dp"
         app:rnv_roll_direction="up"
-        app:rnv_numbers_padding_left="20dp"
-        app:rnv_numbers_padding_right="20dp"/>
+        app:rnv_auto_animator="true"/>
 
     <com.wiser.roll.RollNumberView
         android:id="@+id/rnv_number2"

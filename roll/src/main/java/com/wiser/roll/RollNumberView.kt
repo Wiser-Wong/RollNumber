@@ -10,6 +10,7 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import java.util.regex.Pattern
 import kotlin.math.abs
 
 /**
@@ -57,12 +58,12 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
     /**
      * 滚动结束时展示的数字
      */
-    private var allNumbers: Int = 0
+    private var allNumbers: String? = "0"
 
     /**
      * 全部text
      */
-    private var fullText = ""
+    private var fullText: String? = ""
 
     /**
      * 数字前文字
@@ -142,6 +143,11 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
      */
     private var direction: Int = UP
 
+    /**
+     * 是否有动画
+     */
+    private var isAnimator: Boolean = true
+
     companion object {
         const val UP = 1000
         const val DOWN = 1001
@@ -156,7 +162,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
             ta.getInt(R.styleable.RollNumberView_rnv_roll_random_max_count, rollRandomMaxCount)
         startText = ta.getString(R.styleable.RollNumberView_rnv_start_text) ?: ""
         endText = ta.getString(R.styleable.RollNumberView_rnv_end_text) ?: ""
-        allNumbers = ta.getInt(R.styleable.RollNumberView_rnv_numbers, allNumbers)
+        allNumbers = ta.getString(R.styleable.RollNumberView_rnv_numbers) ?: ""
         numTextSize = ta.getDimension(R.styleable.RollNumberView_rnv_numbers_size, numTextSize)
         startTextSize =
             ta.getDimension(R.styleable.RollNumberView_rnv_start_text_size, numTextSize)
@@ -174,7 +180,8 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
             R.styleable.RollNumberView_rnv_numbers_padding_right,
             numberPaddingRight
         )
-        direction = ta.getInt(R.styleable.RollNumberView_rnv_roll_direction,direction)
+        direction = ta.getInt(R.styleable.RollNumberView_rnv_roll_direction, direction)
+        isAnimator = ta.getBoolean(R.styleable.RollNumberView_rnv_auto_animator, isAnimator)
         ta.recycle()
 
         startPaint.isAntiAlias = true
@@ -199,104 +206,147 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
         }
 
         fullText = startText + allNumbers + endText
+
+        if (isAnimator) {
+            startAnim()
+        }
     }
 
     /**
-     * 设置文案 并执行动画
+     * 设置文案 可选择执行动画
      */
     fun setText(
-        numbers: Int,
+        numbers: String?,
         startText: String? = "",
-        endText: String? = ""
+        endText: String? = "",
+        isAnimator: Boolean = true
     ) {
         requestLayout()
         this.fullText = startText + numbers + endText
         this.allNumbers = numbers
         this.startText = startText
         this.endText = endText
-        startAnim(duration)
+        this.isAnimator = isAnimator
+        if (isAnimator) {
+            startAnim()
+        }
         invalidate()
     }
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.save()
-        // 开始文字
-        startText?.let {
-            canvas?.drawText(
-                it,
-                paddingLeft.toFloat(),
-                getRealHeight() + paddingTop + borderPadding,
-                startPaint
-            )
-        }
-        // 中间数字
-        val numbersChar = allNumbers.toString().toCharArray()
-        for ((i, v) in numbersChar.withIndex()) {
-            val chars = getRandomsStr(i, v, numbersChar.size).toCharArray()
-            if (!chars.contentEquals(rollNumbersChar)) {
-                this.rollNumbersChar = chars
+
+        if (isAnimator && isNumber(allNumbers)) {
+            // 开始文字
+            startText?.let {
+                canvas?.drawText(
+                    it,
+                    paddingLeft.toFloat(),
+                    getRealHeight() + paddingTop + borderPadding,
+                    startPaint
+                )
             }
-            for ((j, c) in rollNumbersChar.withIndex()) {
-                // 当已经滚动到最底部的数时，直接绘制最后一个数字，并停留在此处，不进行滚动了，否则就继续绘制滚动数字
-                when (direction) {
-                    UP -> {
-                        if (abs(getMeasureY() * (rollNumbersChar.size - 1)) <= abs(currentMoveY)) {
-                            canvas?.drawText(
-                                v.toString(),
-                                (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
-                                    c.toString()
-                                ) * i,
-                                getRealHeight() + paddingTop + borderPadding,
-                                numPaint
-                            )
-                            break
-                        }
-                        canvas?.drawText(
-                            rollNumbersChar,
-                            j,
-                            1,
-                            (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
-                                c.toString()
-                            ) * i,
-                            getRealHeight() + paddingTop + borderPadding + getMeasureY() * j + currentMoveY,
-                            numPaint
-                        )
+            allNumbers?.let { nums ->
+                // 中间数字
+                val numbersChar = nums.toCharArray()
+                for ((i, v) in nums.withIndex()) {
+                    val chars = getRandomsStr(i, v, numbersChar.size).toCharArray()
+                    if (!chars.contentEquals(rollNumbersChar)) {
+                        this.rollNumbersChar = chars
                     }
-                    DOWN -> {
-                        if (abs(getMeasureY() * (rollNumbersChar.size - 1)) <= (getMeasureY() * (rollRandomMaxCount - 1) + currentMoveY)) {
-                            canvas?.drawText(
-                                v.toString(),
-                                (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
-                                    c.toString()
-                                ) * i,
-                                getRealHeight() + paddingTop + borderPadding,
-                                numPaint
-                            )
-                            break
+                    for ((j, c) in rollNumbersChar.withIndex()) {
+                        // 当已经滚动到最底部的数时，直接绘制最后一个数字，并停留在此处，不进行滚动了，否则就继续绘制滚动数字
+                        when (direction) {
+                            UP -> {
+                                if (abs(getMeasureY() * (rollNumbersChar.size - 1)) <= abs(
+                                        currentMoveY
+                                    )
+                                ) {
+                                    canvas?.drawText(
+                                        v.toString(),
+                                        (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
+                                            c.toString()
+                                        ) * i,
+                                        getRealHeight() + paddingTop + borderPadding,
+                                        numPaint
+                                    )
+                                    break
+                                }
+                                canvas?.drawText(
+                                    rollNumbersChar,
+                                    j,
+                                    1,
+                                    (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
+                                        c.toString()
+                                    ) * i,
+                                    getRealHeight() + paddingTop + borderPadding + getMeasureY() * j + currentMoveY,
+                                    numPaint
+                                )
+                            }
+                            DOWN -> {
+                                if (abs(getMeasureY() * (rollNumbersChar.size - 1)) <= (getMeasureY() * (rollRandomMaxCount - 1) + currentMoveY)) {
+                                    canvas?.drawText(
+                                        v.toString(),
+                                        (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
+                                            c.toString()
+                                        ) * i,
+                                        getRealHeight() + paddingTop + borderPadding,
+                                        numPaint
+                                    )
+                                    break
+                                }
+                                canvas?.drawText(
+                                    rollNumbersChar,
+                                    j,
+                                    1,
+                                    (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
+                                        c.toString()
+                                    ) * i,
+                                    getRealHeight() + paddingTop + borderPadding - getMeasureY() * j + (getMeasureY() * (rollRandomMaxCount - 1) + currentMoveY),
+                                    numPaint
+                                )
+                            }
                         }
-                        canvas?.drawText(
-                            rollNumbersChar,
-                            j,
-                            1,
-                            (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
-                                c.toString()
-                            ) * i,
-                            getRealHeight() + paddingTop + borderPadding - getMeasureY() * j + (getMeasureY() * (rollRandomMaxCount - 1) + currentMoveY),
-                            numPaint
-                        )
                     }
                 }
             }
-        }
-        // 结束文字
-        endText?.let {
-            canvas?.drawText(
-                it,
-                startPaint.measureText(startText) + numPaint.measureText(allNumbers.toString()) + paddingLeft + numberPaddingLeft + numberPaddingRight,
-                getRealHeight() + paddingTop + borderPadding,
-                endPaint
-            )
+            // 结束文字
+            endText?.let {
+                canvas?.drawText(
+                    it,
+                    startPaint.measureText(startText) + numPaint.measureText(
+                        allNumbers ?: ""
+                    ) + paddingLeft + numberPaddingLeft + numberPaddingRight,
+                    getRealHeight() + paddingTop + borderPadding,
+                    endPaint
+                )
+            }
+        } else {
+            startText?.let {
+                canvas?.drawText(
+                    it, paddingLeft.toFloat(), getRealHeight() + paddingTop + borderPadding,
+                    startPaint
+                )
+            }
+            allNumbers?.let {
+                canvas?.drawText(
+                    it,
+                    (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft),
+                    getRealHeight() + paddingTop + borderPadding,
+                    numPaint
+                )
+            }
+            endText?.let {
+                canvas?.drawText(
+                    it,
+                    startPaint.measureText(startText) + numPaint.measureText(
+                        allNumbers ?: ""
+                    ) + paddingLeft + numberPaddingLeft + numberPaddingRight,
+                    getRealHeight() + paddingTop + borderPadding,
+                    endPaint
+                )
+            }
         }
         canvas?.restore()
     }
@@ -311,9 +361,12 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
             return str ?: "01234567"
         }
         val sb = StringBuffer()
+        if (rollRandomMaxCount < size * 2) {
+            this.rollRandomMaxCount = size * 2 + 4
+        }
         for (i in 0..(rollRandomMaxCount - (size - index) * 2)) {
             if (i == 0) {
-                sb.append(num)
+                sb.append(0)
             } else {
                 sb.append((0..9).random())
             }
@@ -330,7 +383,9 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
         val widthSpecSize = MeasureSpec.getSize(widthMeasureSpec)
         val heightSpecSize = MeasureSpec.getSize(heightMeasureSpec)
         val textWidth =
-            startPaint.measureText(startText) + numPaint.measureText(allNumbers.toString()) + endPaint.measureText(
+            startPaint.measureText(startText) + numPaint.measureText(
+                allNumbers ?: ""
+            ) + endPaint.measureText(
                 endText
             )
         var height: Int =
@@ -350,9 +405,19 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
     /**
      * 执行动画
      */
-    private fun startAnim(duration: Long) {
+    private fun startAnim() {
         // 清空记录的随机数
         rollNumberRecords.clear()
+        allNumbers?.let { nums ->
+            val numbersChar = nums.toCharArray()
+            if (numbersChar.isNotEmpty()) {
+                val chars =
+                    getRandomsStr(numbersChar.size, numbersChar[0], numbersChar.size).toCharArray()
+                if (!chars.contentEquals(rollNumbersChar)) {
+                    this.rollNumbersChar = chars
+                }
+            }
+        }
         val animator = ValueAnimator()
         val startY: Float
         val endY: Float
@@ -390,4 +455,16 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
         numPaint.strokeWidth
     ).coerceAtMost(endPaint.strokeWidth) * 2
 
+    /**
+     * 判断字符串是否为数字
+     *
+     * @param str
+     * @return
+     */
+    private fun isNumber(str: String?): Boolean {
+        if (TextUtils.isEmpty(str)) return false
+        val pattern = Pattern.compile("[0-9]*")
+        val isNum = pattern.matcher(str)
+        return isNum.matches()
+    }
 }
