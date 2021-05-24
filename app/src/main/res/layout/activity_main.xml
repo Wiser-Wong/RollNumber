@@ -38,7 +38,7 @@
         app:rnv_start_text_color="#ff00ff"
         app:rnv_start_text_size="20sp"
         app:rnv_text_is_stroke="true"
-        app:rnv_text_stroke="2dp" />
+        app:rnv_text_stroke_width="2dp" />
 
     <com.wiser.roll.RollNumberView
         android:id="@+id/rnv_number2"
@@ -63,7 +63,7 @@
         app:rnv_start_text_color="#ff00ff"
         app:rnv_start_text_size="20sp"
         app:rnv_text_is_stroke="true"
-        app:rnv_text_stroke="2dp" />
+        app:rnv_text_stroke_width="2dp" />
 
     <com.wiser.rollnumber.ticker.TickerView
         android:id="@+id/tickerView"

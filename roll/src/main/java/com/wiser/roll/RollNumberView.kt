@@ -188,7 +188,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
             ta.getColor(R.styleable.RollNumberView_rnv_start_text_color, numTextColor)
         endTextColor = ta.getColor(R.styleable.RollNumberView_rnv_end_text_color, numTextColor)
         textStrokeWidth =
-            ta.getDimension(R.styleable.RollNumberView_rnv_text_stroke, textStrokeWidth)
+            ta.getDimension(R.styleable.RollNumberView_rnv_text_stroke_width, textStrokeWidth)
         isStroke = ta.getBoolean(R.styleable.RollNumberView_rnv_text_is_stroke, isStroke)
         numberPaddingLeft =
             ta.getDimension(R.styleable.RollNumberView_rnv_numbers_padding_left, numberPaddingLeft)
@@ -304,7 +304,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
                                     canvas?.drawText(
                                         v.toString(),
                                         (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
-                                            c.toString()
+                                            maxWidthNum
                                         ) * i,
                                         getRealHeight() + paddingTop + borderPadding,
                                         numPaint
@@ -316,7 +316,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
                                     j,
                                     1,
                                     (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
-                                        c.toString()
+                                        maxWidthNum
                                     ) * i,
                                     getRealHeight() + paddingTop + borderPadding + getMeasureY() * j + currentMoveY,
                                     numPaint
@@ -327,7 +327,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
                                     canvas?.drawText(
                                         v.toString(),
                                         (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
-                                            c.toString()
+                                            maxWidthNum
                                         ) * i,
                                         getRealHeight() + paddingTop + borderPadding,
                                         numPaint

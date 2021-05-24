@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity() {
             sb.append((0..9).random())
         }
         rnv_number?.setText(numbers = "1231231919191898", isAnimator = true)
-        rnv_number2?.setText(sb.toString(), "你好", "美女")
+        rnv_number2?.setText(sb.toString(), "你好", "李焕英")
 
     }
 }
