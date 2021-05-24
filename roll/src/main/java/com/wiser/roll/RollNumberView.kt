@@ -10,6 +10,7 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import java.lang.StringBuilder
 import java.util.regex.Pattern
 import kotlin.math.abs
 
@@ -58,7 +59,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
     /**
      * 滚动结束时展示的数字
      */
-    private var allNumbers: String? = "0"
+    private var allNumbers: String? = ""
 
     /**
      * 全部text
@@ -144,13 +145,28 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
     private var direction: Int = UP
 
     /**
+     * 模式
+     * 模式1：设定的数值之前都是随机数字滚动
+     * 模式2：设置的数值之前都是从0到该数的数字滚动
+     */
+    private var mode: Int = FIXED_MODE
+
+    /**
      * 是否有动画
      */
     private var isAnimator: Boolean = true
 
+    /**
+     * 0到9最大宽度数字 用于计算最大宽度
+     */
+    private val maxWidthNum = "7"
+
     companion object {
         const val UP = 1000
         const val DOWN = 1001
+
+        const val RANDOM_MODE = 2000
+        const val FIXED_MODE = 2001
     }
 
     init {
@@ -182,6 +198,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
         )
         direction = ta.getInt(R.styleable.RollNumberView_rnv_roll_direction, direction)
         isAnimator = ta.getBoolean(R.styleable.RollNumberView_rnv_auto_animator, isAnimator)
+        mode = ta.getInt(R.styleable.RollNumberView_rnv_roll_mode, mode)
         ta.recycle()
 
         startPaint.isAntiAlias = true
@@ -224,6 +241,27 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
         requestLayout()
         this.fullText = startText + numbers + endText
         this.allNumbers = numbers
+        this.startText = startText
+        this.endText = endText
+        this.isAnimator = isAnimator
+        if (isAnimator) {
+            startAnim()
+        }
+        invalidate()
+    }
+
+    /**
+     * 设置文案 可选择执行动画
+     */
+    fun setText(
+        numbers: Int,
+        startText: String? = "",
+        endText: String? = "",
+        isAnimator: Boolean = true
+    ) {
+        requestLayout()
+        this.fullText = startText + numbers + endText
+        this.allNumbers = numbers.toString()
         this.startText = startText
         this.endText = endText
         this.isAnimator = isAnimator
@@ -300,8 +338,8 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
                                     rollNumbersChar,
                                     j,
                                     1,
-                                    (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
-                                        c.toString()
+                                    paddingLeft + numberPaddingLeft + numPaint.measureText(
+                                        maxWidthNum
                                     ) * i,
                                     getRealHeight() + paddingTop + borderPadding - getMeasureY() * j + (getMeasureY() * (rollRandomMaxCount - 1) + currentMoveY),
                                     numPaint
@@ -352,6 +390,21 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
     }
 
     /**
+     * 由于7的数字宽度相对于其他数字比较大，所以以数字7位所有占位
+     */
+    private fun getMaxWidth(nums: String): String {
+        return if (isNumber(nums)) {
+            val sb = StringBuilder()
+            for (i in nums) {
+                sb.append(maxWidthNum)
+            }
+            sb.toString()
+        } else {
+            nums
+        }
+    }
+
+    /**
      * 获取随机滚动的数字字符串
      * 字符串会转换成char[]来进行绘制
      */
@@ -361,19 +414,51 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
             return str ?: "01234567"
         }
         val sb = StringBuffer()
-        if (rollRandomMaxCount < size * 2) {
-            this.rollRandomMaxCount = size * 2 + 4
-        }
-        for (i in 0..(rollRandomMaxCount - (size - index) * 2)) {
-            if (i == 0) {
-                sb.append(0)
-            } else {
-                sb.append((0..9).random())
+        when (mode) {
+            RANDOM_MODE -> {
+                if (rollRandomMaxCount < size * 2) {
+                    this.rollRandomMaxCount = size * 2 + 4
+                }
+                for (i in 0..(rollRandomMaxCount - (size - index) * 2)) {
+                    if (i == 0) {
+                        sb.append(0)
+                    } else {
+                        sb.append((0..9).random())
+                    }
+                }
+                sb.append(num)
+            }
+            FIXED_MODE -> {
+                rollRandomMaxCount = getMaxNum(allNumbers ?: "0") + 1
+                for (i in 0..num.toString().toInt()) {
+                    sb.append(i)
+                }
             }
         }
-        sb.append(num)
         rollNumberRecords[index] = sb.toString()
         return sb.toString()
+    }
+
+    /**
+     * 获取一个数中最大的数字
+     */
+    private fun getMaxNum(nums: String): Int {
+        var temp = 0
+        for (c in nums) {
+            val v = c.toString()
+            if (isNumber(v)) {
+                val n = v.toInt()
+                if (n > temp) {
+                    temp = n
+                }
+            }
+        }
+        return temp
+    }
+
+    private fun covertIntToChar(v: Int): CharArray {
+        val s = v.toString()
+        return s.toCharArray()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
@@ -384,7 +469,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
         val heightSpecSize = MeasureSpec.getSize(heightMeasureSpec)
         val textWidth =
             startPaint.measureText(startText) + numPaint.measureText(
-                allNumbers ?: ""
+                getMaxWidth(allNumbers ?: "") ?: ""
             ) + endPaint.measureText(
                 endText
             )
@@ -408,11 +493,16 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
     private fun startAnim() {
         // 清空记录的随机数
         rollNumberRecords.clear()
+        if (!isNumber(allNumbers)) return
         allNumbers?.let { nums ->
             val numbersChar = nums.toCharArray()
             if (numbersChar.isNotEmpty()) {
                 val chars =
-                    getRandomsStr(numbersChar.size, numbersChar[0], numbersChar.size).toCharArray()
+                    getRandomsStr(
+                        numbersChar.size,
+                        covertIntToChar(getMaxNum(nums))[0],
+                        numbersChar.size
+                    ).toCharArray()
                 if (!chars.contentEquals(rollNumbersChar)) {
                     this.rollNumbersChar = chars
                 }

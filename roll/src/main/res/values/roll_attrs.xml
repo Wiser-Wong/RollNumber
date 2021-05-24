@@ -21,5 +21,9 @@
             <enum name="up" value="1000"/>
             <enum name="down" value="1001"/>
         </attr>
+        <attr name="rnv_roll_mode" format="reference|integer">
+            <enum name="random" value="2000"/>
+            <enum name="fixed" value="2001"/>
+        </attr>
     </declare-styleable>
 </resources>

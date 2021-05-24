@@ -23,21 +23,22 @@
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:text="Hello World!"
+        app:rnv_auto_animator="true"
         app:rnv_end_text="李焕英"
         app:rnv_end_text_color="#0000ff"
         app:rnv_end_text_size="30sp"
-        app:rnv_numbers="100"
+        app:rnv_numbers="0"
         app:rnv_numbers_color="#00ff00"
         app:rnv_numbers_size="40sp"
-        app:rnv_roll_duration="25000"
+        app:rnv_roll_direction="down"
+        app:rnv_roll_duration="2000"
         app:rnv_roll_random_max_count="10"
         app:rnv_start_text="你好"
+        app:rnv_roll_mode="fixed"
         app:rnv_start_text_color="#ff00ff"
         app:rnv_start_text_size="20sp"
         app:rnv_text_is_stroke="true"
-        app:rnv_text_stroke="2dp"
-        app:rnv_roll_direction="up"
-        app:rnv_auto_animator="true"/>
+        app:rnv_text_stroke="2dp" />
 
     <com.wiser.roll.RollNumberView
         android:id="@+id/rnv_number2"
@@ -51,17 +52,18 @@
         app:rnv_end_text_size="30sp"
         app:rnv_numbers="100"
         app:rnv_numbers_color="#00ff00"
+        app:rnv_numbers_padding_left="20dp"
+        app:rnv_numbers_padding_right="20dp"
         app:rnv_numbers_size="40sp"
+        app:rnv_roll_direction="up"
         app:rnv_roll_duration="1200"
         app:rnv_roll_random_max_count="10"
         app:rnv_start_text="你好"
+        app:rnv_roll_mode="random"
         app:rnv_start_text_color="#ff00ff"
         app:rnv_start_text_size="20sp"
         app:rnv_text_is_stroke="true"
-        app:rnv_text_stroke="2dp"
-        app:rnv_roll_direction="up"
-        app:rnv_numbers_padding_left="20dp"
-        app:rnv_numbers_padding_right="20dp"/>
+        app:rnv_text_stroke="2dp" />
 
     <com.wiser.rollnumber.ticker.TickerView
         android:id="@+id/tickerView"
@@ -78,8 +80,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="开始滚动"
-        android:onClick="rollClick"/>
+        android:onClick="rollClick"
+        android:text="开始滚动" />
 
     <com.wiser.rollnumber.NumberFlipView
         android:id="@+id/nfv_number"
