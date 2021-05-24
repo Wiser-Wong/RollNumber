@@ -5,6 +5,18 @@
 
 ![images](https://github.com/Wiser-Wong/RollNumber/blob/master/images/rollNumber.gif)
 
+## 环境配置
+    allprojects {
+    		repositories {
+    			...
+    			maven { url 'https://jitpack.io' }
+    		}
+    	}
+    	
+    	dependencies {
+    	        implementation 'com.github.Wiser-Wong:RollNumber:1.0.0'
+    	}
+
 ## 使用方法
     rnv_number?.setText(919191898, "你好", "李焕英",true)
     
