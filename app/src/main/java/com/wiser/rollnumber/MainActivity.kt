@@ -23,8 +23,6 @@ class MainActivity : AppCompatActivity() {
 
         nfv_number?.jumpNumber()
 
-        tvNumber?.runWithAnimation(220f)
-
         tickerView.run { tickerView.text = "$123" + (0..1000).random() + "$" }//显示
 
         val sb = StringBuffer()
@@ -33,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         }
         rnv_number?.setText(numbers = "1231231919191898", isAnimator = true)
         rnv_number2?.setText(sb.toString(), "你好", "李焕英")
+
+        tvNumber?.startAnimator(sb.toString().toFloat())
 
     }
 }

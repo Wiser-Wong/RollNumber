@@ -7,14 +7,17 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <com.wiser.rollnumber.RunTextView
+    <com.wiser.roll.RunTextView
         android:id="@+id/tvNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="30dp"
         android:text="Hello World!"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+        app:rtv_auto="true"
+        app:rtv_duration="4000"
+        app:rtv_number="2098.89"/>
 
     <com.wiser.roll.RollNumberView
         android:id="@+id/rnv_number"

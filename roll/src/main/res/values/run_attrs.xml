@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RunTextView">
+        <attr name="rtv_duration" format="integer"/>
+        <attr name="rtv_number" format="float"/>
+        <attr name="rtv_auto" format="boolean"/>
+    </declare-styleable>
+</resources>
