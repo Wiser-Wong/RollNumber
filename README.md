@@ -14,7 +14,7 @@
     	}
     	
     	dependencies {
-    	        implementation 'com.github.Wiser-Wong:RollNumber:1.0.0'
+    	        implementation 'com.github.Wiser-Wong:RollNumber:1.0.1'
     	}
 
 ## 使用方法
