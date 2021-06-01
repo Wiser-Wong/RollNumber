@@ -13,7 +13,6 @@
         <attr name="rnv_end_text_color" format="reference|color"/>
         <attr name="rnv_numbers_color" format="reference|color"/>
         <attr name="rnv_text_stroke_width" format="reference|dimension"/>
-        <attr name="rnv_text_is_stroke" format="reference|boolean"/>
         <attr name="rnv_numbers_padding_left" format="reference|dimension"/>
         <attr name="rnv_numbers_padding_right" format="reference|dimension"/>
         <attr name="rnv_auto_animator" format="reference|boolean"/>
@@ -24,6 +23,11 @@
         <attr name="rnv_roll_mode" format="reference|integer">
             <enum name="random" value="2000"/>
             <enum name="fixed" value="2001"/>
+        </attr>
+        <attr name="rnv_text_style" format="reference|integer">
+            <enum name="fill" value="3000"/>
+            <enum name="stroke" value="3001"/>
+            <enum name="fill_and_stroke" value="3002"/>
         </attr>
     </declare-styleable>
 </resources>

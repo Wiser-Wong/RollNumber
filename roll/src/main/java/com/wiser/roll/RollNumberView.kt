@@ -122,11 +122,6 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
     private var textStrokeWidth: Float = 5f
 
     /**
-     * 是否stroke
-     */
-    private var isStroke: Boolean = false
-
-    /**
      * 滚动随机数个数
      */
     private var rollRandomMaxCount: Int = 10
@@ -152,6 +147,11 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
     private var mode: Int = FIXED_MODE
 
     /**
+     * 文字风格
+     */
+    private var style: Int = FILL
+
+    /**
      * 是否有动画
      */
     private var isAnimator: Boolean = true
@@ -167,6 +167,10 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
 
         const val RANDOM_MODE = 2000
         const val FIXED_MODE = 2001
+
+        const val FILL = 3000
+        const val STROKE = 3001
+        const val FILL_AND_STROKE = 3002
     }
 
     init {
@@ -189,7 +193,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
         endTextColor = ta.getColor(R.styleable.RollNumberView_rnv_end_text_color, numTextColor)
         textStrokeWidth =
             ta.getDimension(R.styleable.RollNumberView_rnv_text_stroke_width, textStrokeWidth)
-        isStroke = ta.getBoolean(R.styleable.RollNumberView_rnv_text_is_stroke, isStroke)
+        style = ta.getInt(R.styleable.RollNumberView_rnv_text_style, style)
         numberPaddingLeft =
             ta.getDimension(R.styleable.RollNumberView_rnv_numbers_padding_left, numberPaddingLeft)
         numberPaddingRight = ta.getDimension(
@@ -216,11 +220,15 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
         endPaint.textSize = endTextSize
         endPaint.strokeWidth = textStrokeWidth
 
-        if (isStroke) {
-            startPaint.style = Paint.Style.STROKE
-            numPaint.style = Paint.Style.STROKE
-            endPaint.style = Paint.Style.STROKE
+        val style = when(style) {
+            FILL -> Paint.Style.FILL
+            STROKE -> Paint.Style.STROKE
+            FILL_AND_STROKE -> Paint.Style.FILL_AND_STROKE
+            else -> Paint.Style.FILL
         }
+        startPaint.style = style
+        numPaint.style = style
+        endPaint.style = style
 
         fullText = startText + allNumbers + endText
 
