@@ -30,7 +30,7 @@
         app:rnv_end_text="李焕英"
         app:rnv_end_text_color="#0000ff"
         app:rnv_end_text_size="30sp"
-        app:rnv_numbers="0"
+        app:rnv_numbers="1838"
         app:rnv_numbers_color="#00ff00"
         app:rnv_numbers_size="40sp"
         app:rnv_roll_direction="down"
@@ -40,7 +40,7 @@
         app:rnv_roll_mode="fixed"
         app:rnv_start_text_color="#ff00ff"
         app:rnv_start_text_size="20sp"
-        app:rnv_text_style="stroke"
+        app:rnv_text_style="fill_and_stroke"
         app:rnv_text_stroke_width="1dp" />
 
     <com.wiser.roll.RollNumberView

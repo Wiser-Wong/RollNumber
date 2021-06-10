@@ -237,6 +237,10 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
         }
     }
 
+    fun setAnimator(isAnimator: Boolean) {
+        this.isAnimator = isAnimator
+    }
+
     /**
      * 设置文案 可选择执行动画
      */
@@ -346,7 +350,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
                                     rollNumbersChar,
                                     j,
                                     1,
-                                    paddingLeft + numberPaddingLeft + numPaint.measureText(
+                                    (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
                                         maxWidthNum
                                     ) * i,
                                     getRealHeight() + paddingTop + borderPadding - getMeasureY() * j + (getMeasureY() * (rollRandomMaxCount - 1) + currentMoveY),
