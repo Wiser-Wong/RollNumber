@@ -159,7 +159,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
     /**
      * 0到9最大宽度数字 用于计算最大宽度
      */
-    private val maxWidthNum = "7"
+    private val maxWidthNum = "4"
 
     companion object {
         const val UP = 1000
@@ -245,7 +245,7 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
      * 设置文案 可选择执行动画
      */
     fun setText(
-        numbers: String?,
+        numbers: String? = "",
         startText: String? = "",
         endText: String? = "",
         isAnimator: Boolean = true
@@ -363,11 +363,19 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
             }
             // 结束文字
             endText?.let {
+//                canvas?.drawText(
+//                        it,
+//                        startPaint.measureText(startText) + numPaint.measureText(
+//                                allNumbers ?: ""
+//                        ) + paddingLeft + numberPaddingLeft + numberPaddingRight,
+//                        getRealHeight() + paddingTop + borderPadding,
+//                        endPaint
+//                )
+                val numbersLength = allNumbers?.length ?: 0
+                val numbersMaxWidth = numPaint.measureText(maxWidthNum) * numbersLength
                 canvas?.drawText(
                     it,
-                    startPaint.measureText(startText) + numPaint.measureText(
-                        allNumbers ?: ""
-                    ) + paddingLeft + numberPaddingLeft + numberPaddingRight,
+                    startPaint.measureText(startText) + numbersMaxWidth + paddingLeft + numberPaddingLeft + numberPaddingRight,
                     getRealHeight() + paddingTop + borderPadding,
                     endPaint
                 )
@@ -380,19 +388,40 @@ class RollNumberView(context: Context, attrs: AttributeSet) : View(context, attr
                 )
             }
             allNumbers?.let {
-                canvas?.drawText(
-                    it,
-                    (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft),
-                    getRealHeight() + paddingTop + borderPadding,
-                    numPaint
-                )
+//                canvas?.drawText(
+//                    it,
+//                    (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft),
+//                    getRealHeight() + paddingTop + borderPadding,
+//                    numPaint
+//                )
+                val numbersChar = it.toCharArray()
+                for ((i, c) in numbersChar.withIndex()) {
+                    canvas?.drawText(
+                        numbersChar,
+                        i,
+                        1,
+                        (startPaint.measureText(startText) + paddingLeft + numberPaddingLeft) + numPaint.measureText(
+                            maxWidthNum
+                        ) * i,
+                        getRealHeight() + paddingTop + borderPadding,
+                        numPaint
+                    )
+                }
             }
             endText?.let {
+//                canvas?.drawText(
+//                        it,
+//                        startPaint.measureText(startText) + numPaint.measureText(
+//                                allNumbers ?: ""
+//                        ) + paddingLeft + numberPaddingLeft + numberPaddingRight,
+//                        getRealHeight() + paddingTop + borderPadding,
+//                        endPaint
+//                )
+                val numbersLength = allNumbers?.length ?: 0
+                val numbersMaxWidth = numPaint.measureText(maxWidthNum) * numbersLength
                 canvas?.drawText(
                     it,
-                    startPaint.measureText(startText) + numPaint.measureText(
-                        allNumbers ?: ""
-                    ) + paddingLeft + numberPaddingLeft + numberPaddingRight,
+                    startPaint.measureText(startText) + numbersMaxWidth + paddingLeft + numberPaddingLeft + numberPaddingRight,
                     getRealHeight() + paddingTop + borderPadding,
                     endPaint
                 )
